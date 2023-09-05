@@ -8,10 +8,197 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     exit;
 }
 
-include("../conexao.php");
+require_once "../config.php";
 
-$consulta = "SELECT * FROM users"; 
-$con = $mysqli->query($consulta) or die($mysqli->error);
+// Defina variáveis e inicialize com valores vazios
+$name = $username = $password = $confirm_password = $position = $serial = $phone = $discord = $passaporte = "";
+$name_err = $username_err = $password_err = $position_err = $serial_err = $confirm_password_err = $phone_err = $discord_err = $passaporte_err = "";
+$caduser = "Usuário Cadastrado!";
+
+// Processando dados do formulário quando o formulário é enviado
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+ 
+  // Validar nome
+  if(empty(trim($_POST["name"]))){
+    $name_err = "Por favor insira uma nome.";     
+} else{
+    $name = trim($_POST["name"]);
+}
+// Validar position
+if(empty(trim($_POST["position"]))){
+  $position_err = "Por favor insira um cargo.";     
+} else{
+  $position = trim($_POST["position"]);
+}
+// Validar phone
+if(empty(trim($_POST["phone"]))){
+  $phone_err = "Por favor insira um telefone.";     
+} else{
+  $phone = trim($_POST["phone"]);
+}
+// Validar discord
+if(empty(trim($_POST["discord"]))){
+  $discord_err = "Por favor insira o discord.";     
+} else{
+  $discord = trim($_POST["discord"]);
+}
+    // Validar nome de usuário
+    if(empty(trim($_POST["username"]))){
+        $username_err = "Por favor coloque um nome de usuário.";
+    } elseif(!preg_match('/^[a-zA-Z0-9_]+$/', trim($_POST["username"]))){
+        $username_err = "O nome de usuário pode conter apenas letras, números e sublinhados.";
+    } else{
+        // Prepare uma declaração selecionada
+        $sql = "SELECT id FROM users WHERE username = :username";
+        
+        if($stmt = $pdo->prepare($sql)){
+            // Vincule as variáveis à instrução preparada como parâmetros
+            $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
+            
+            // Definir parâmetros
+            $param_username = trim($_POST["username"]);
+            
+            // Tente executar a declaração preparada
+            if($stmt->execute()){
+                if($stmt->rowCount() == 1){
+                    $username_err = "Este nome de usuário já está em uso.";
+                } else{
+                    $username = trim($_POST["username"]);
+                }
+            } else{
+                echo "Ops! Algo deu errado. Por favor, tente novamente mais tarde.";
+            }
+
+            // Fechar declaração
+            unset($stmt);
+        }
+    }
+    
+    // Validar serial
+    if(empty(trim($_POST["serial"]))){
+      $serial_err = "Por favor coloque uma inscrição.";
+  } elseif(!preg_match('/^[0-9]+$/', trim($_POST["serial"]))){
+      $serial_err = "A inscrição deve conter apenas números";
+  } else{
+      // Prepare uma declaração selecionada
+      $sql = "SELECT id FROM users WHERE serial = :serial";
+      
+      if($stmt = $pdo->prepare($sql)){
+          // Vincule as variáveis à instrução preparada como parâmetros
+          $stmt->bindParam(":serial", $param_serial, PDO::PARAM_STR);
+          
+          // Definir parâmetros
+          $param_serial = trim($_POST["serial"]);
+          
+          // Tente executar a declaração preparada
+          if($stmt->execute()){
+              if($stmt->rowCount() == 1){
+                  $username_err = "Esta inscrição já existe.";
+              } else{
+                  $username = trim($_POST["serial"]);
+              }
+          } else{
+              echo "Ops! Algo deu errado. Por favor, tente novamente mais tarde.";
+          }
+
+          // Fechar declaração
+          unset($stmt);
+      }
+  }
+
+  // Validar passaporte
+  if(empty(trim($_POST["passaporte"]))){
+    $serial_err = "Por favor coloque um passaporte";
+} elseif(!preg_match('/^[0-9]+$/', trim($_POST["passaporte"]))){
+    $serial_err = "O passaporte deve conter somente números.";
+} else{
+    // Prepare uma declaração selecionada
+    $sql = "SELECT id FROM users WHERE passaporte = :passaporte";
+    
+    if($stmt = $pdo->prepare($sql)){
+        // Vincule as variáveis à instrução preparada como parâmetros
+        $stmt->bindParam(":passaporte", $param_passaporte, PDO::PARAM_STR);
+        
+        // Definir parâmetros
+        $param_passaporte = trim($_POST["passaporte"]);
+        
+        // Tente executar a declaração preparada
+        if($stmt->execute()){
+            if($stmt->rowCount() == 1){
+                $passaporte_err = "Este passaporte já está cadastrado.";
+            } else{
+                $passaporte = trim($_POST["passaporte"]);
+            }
+        } else{
+            echo "Ops! Algo deu errado. Por favor, tente novamente mais tarde.";
+        }
+
+        // Fechar declaração
+        unset($stmt);
+    }
+}
+
+    // Validar senha
+    if(empty(trim($_POST["password"]))){
+        $password_err = "Por favor insira uma senha.";     
+    } elseif(strlen(trim($_POST["password"])) < 6){
+        $password_err = "A senha deve ter pelo menos 6 caracteres.";
+    } else{
+        $password = trim($_POST["password"]);
+    }
+    
+    // Validar e confirmar a senha
+    if(empty(trim($_POST["confirm_password"]))){
+        $confirm_password_err = "Por favor, confirme a senha.";     
+    } else{
+        $confirm_password = trim($_POST["confirm_password"]);
+        if(empty($password_err) && ($password != $confirm_password)){
+            $confirm_password_err = "A senha não confere.";
+        }
+    }
+    
+    // Verifique os erros de entrada antes de inserir no banco de dados
+    if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($serial_err) && empty($passaporte_err)){
+        
+        // Prepare uma declaração de inserção
+        $sql = "INSERT INTO users (name, username, password, position, serial, phone, discord, passaporte) VALUES (:name, :username, :password, :position, :serial, :phone, :discord, :passaporte)";
+         
+        if($stmt = $pdo->prepare($sql)){
+            // Vincule as variáveis à instrução preparada como parâmetros
+            $stmt->bindParam(":name", $param_name, PDO::PARAM_STR);
+            $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
+            $stmt->bindParam(":password", $param_password, PDO::PARAM_STR);
+            $stmt->bindParam(":position", $param_position, PDO::PARAM_STR);
+            $stmt->bindParam(":serial", $param_serial, PDO::PARAM_STR);
+            $stmt->bindParam(":phone", $param_phone, PDO::PARAM_STR);
+            $stmt->bindParam(":discord", $param_discord, PDO::PARAM_STR);
+            $stmt->bindParam(":passaporte", $param_passaporte, PDO::PARAM_STR);
+
+            // Definir parâmetros
+            $param_name = $name;
+            $param_username = $username;
+            $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
+            $param_position = $position;
+            $param_serial = $serial;
+            $param_phone = $phone;
+            $param_discord = $discord;
+            $param_passaporte = $passaporte;
+            
+            // Tente executar a declaração preparada
+            if($stmt->execute()){
+                echo $caduser;
+            } else{
+                echo "Ops! Algo deu errado. Por favor, tente novamente mais tarde.";
+            }
+
+            // Fechar declaração
+            unset($stmt);
+        }
+    }
+    
+    // Fechar conexão
+    unset($pdo);
+}
 ?>
 
 <!doctype html>
@@ -23,7 +210,7 @@ $con = $mysqli->query($consulta) or die($mysqli->error);
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.115.4">
-    <title>Administração · Jurídico</title>
+    <title>Cadastro · Jurídico</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
 
@@ -239,14 +426,12 @@ $con = $mysqli->query($consulta) or die($mysqli->error);
 
 <div class="container-fluid">
   <div class="row">
-    
-    <?php include('../includes/sidenavadmin.php') ?>
-    
+
+  <?php include('../includes/sidenavadmin.php') ?>
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Administração</h1>
-        <?php if($rank >= 2) { ?>
         <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group me-2">
             <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
@@ -257,41 +442,68 @@ $con = $mysqli->query($consulta) or die($mysqli->error);
             This week
           </button>
         </div>
-        <?php } ?>
       </div>
 
-      <h2>Membros Cadastrados</h2>
-      <div class="table-responsive small">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Nome</th>
-              <th scope="col">Inscrição</th>
-              <th scope="col">Cargo</th>
-              <th scope="col">Telefone</th>
-              <th scope="col">Rank</th>
-              <th scope="col">Cadastrado em</th>
-              <th scope="col">Ação</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php while($dados = $con->fetch_array()) { ?>
-            <tr>
-              <td><?php echo $dados["passaporte"]; ?></td>
-              <td><?php echo $dados["name"]; ?></td>
-              <td><?php echo $dados["serial"]; ?></td>
-              <td><?php echo $dados["position"]; ?></td>
-              <td><?php echo $dados["phone"]; ?></td>
-              <td><?php echo $dados["rank"]; ?></td>
-              <td><?php echo $dados["created"]; ?></td>
-              <td><i class="bi bi-pencil"></i> <a href="#">Editar</a></td>
-            </tr>
-
-            <?php } ?>
-          </tbody>
-        </table>
-      </div>
+      <p class="fs-2">Cadastrar um usuário</p>
+    <form class="row g-3" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+  <div class="col-md-4">
+    <label for="name" class="form-label">Nome</label>
+    <input type="text" name="name" class="form-control <?php echo (!empty($name_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $name; ?>">
+    <span class="invalid-feedback"><?php echo $name_err; ?></span>
+  </div>
+  <div class="col-md-4">
+    <label for="username" class="form-label">Usuário</label>
+    <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
+    <span class="invalid-feedback"><?php echo $username_err; ?></span>
+  </div>
+  <div class="col-md-4">
+    <label for="password" class="form-label">Senha</label>
+    <input type="text" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
+    <span class="invalid-feedback"><?php echo $password_err; ?></span>
+  </div>
+  <div class="col-md-4">
+    <label for="confirm_password" class="form-label">Confirmar senha</label>
+    <input type="text" name="confirm_password" class="form-control <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirm_password; ?>">
+    <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
+  </div>
+  <div class="col-md-4">
+    <label for="position" class="form-label">Cargo</label>
+    <input type="text" name="position" class="form-control <?php echo (!empty($position_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $position; ?>">
+    <span class="invalid-feedback"><?php echo $position_err; ?></span>
+  </div>
+  <div class="col-md-1">
+  <label for="rank" class="form-label">Rank</label>
+  <input class="form-control" type="text" value="1" aria-label="Disabled input example" disabled readonly>
+  </div>
+  <div class="col-md-2">
+    <label for="serial" class="form-label">Inscrição</label>
+    <input type="text" name="serial" class="form-control <?php echo (!empty($serial_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $serial; ?>">
+    <span class="invalid-feedback"><?php echo $serial_err; ?></span>
+  </div>
+  <div class="col-md-2">
+    <label for="passaporte" class="form-label">Passaporte</label>
+    <input type="text" name="passaporte" class="form-control <?php echo (!empty($passaporte_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $passaporte; ?>">
+    <span class="invalid-feedback"><?php echo $passaporte; ?></span>
+  </div>
+  <div class="col-md-2">
+    <label for="phone" class="form-label">Telefone</label>
+    <input type="text" name="phone" class="form-control <?php echo (!empty($phone_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $phone; ?>">
+    <span class="invalid-feedback"><?php echo $phone_err; ?></span>
+  </div>
+  <div class="col-md-2">
+    <label for="discord" class="form-label">Discord</label>
+    <input type="text" name="discord" class="form-control <?php echo (!empty($discord_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $discord; ?>">
+    <span class="invalid-feedback"><?php echo $discord_err; ?></span>
+  </div>
+  <div class="col-md-2">
+    <label for="ativo" class="form-label">Ativo</label>
+    <input type="text" class="form-control" id="ativo" value="1" disabled readonly>
+  </div>
+  <div class="col-12">
+  <input type="submit" class="btn btn-primary" value="Cadastrar">
+  </div>
+</form>
+      
     </main>
   </div>
 </div>

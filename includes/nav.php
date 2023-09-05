@@ -24,7 +24,7 @@
             <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-book"></i> Documentos</a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Regimento Interno</a></li>
+                <li><a class="dropdown-item" href="docs/regimentointerno.php">Regimento Interno</a></li>
                 <li><a class="dropdown-item" href="https://docs.google.com/document/d/1JdUQjArG8mTh4LYcLZCq6VZrX_0RoU20iGTGpAmvHYw/edit?usp=sharing">Regras Gerais</a></li>
                 <li><a class="dropdown-item" href="#">Código Penal</a></li>
                 <li><a class="dropdown-item" href="#">Código Processual</a></li>
