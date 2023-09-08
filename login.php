@@ -35,7 +35,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validar credenciais
     if(empty($username_err) && empty($password_err)){
         // Prepare uma declaração selecionada
-        $sql = "SELECT id, username, password FROM users WHERE username = :username";
+        $sql = "SELECT id, username, password, active FROM users WHERE username = :username";
         
         if($stmt = $pdo->prepare($sql)){
             // Vincule as variáveis à instrução preparada como parâmetros
@@ -52,20 +52,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         $id = $row["id"];
                         $username = $row["username"];
                         $hashed_password = $row["password"];
-                        if(password_verify($password, $hashed_password)){
+                        $active = $row["active"];
+                        if(password_verify($password, $hashed_password) && $active == 1){
                             // A senha está correta, então inicie uma nova sessão
                             session_start();
                             
                             // Armazene dados em variáveis de sessão
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                            
+                            $_SESSION["username"] = $username;                       
                             
                             // Redirecionar o usuário para a página de boas-vindas
                             header("location: welcome.php");
                         } else{
                             // A senha não é válida, exibe uma mensagem de erro genérica
-                            $login_err = "Nome de usuário ou senha inválidos.";
+                            $login_err = "Problema ao se conectar, contate um Administrador.";
                         }
                     }
                 } else{
@@ -87,7 +88,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 ?>
 
 <!doctype html>
-<html lang="en" data-bs-theme="auto">
+<html lang="pt" data-bs-theme="auto">
   <head><script src="../assets/js/color-modes.js"></script>
 
     <meta charset="utf-8">
