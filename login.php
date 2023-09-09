@@ -35,7 +35,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validar credenciais
     if(empty($username_err) && empty($password_err)){
         // Prepare uma declaração selecionada
-        $sql = "SELECT id, username, password, active FROM users WHERE username = :username";
+        $sql = "SELECT id, username, password, rank, active FROM users WHERE username = :username";
         
         if($stmt = $pdo->prepare($sql)){
             // Vincule as variáveis à instrução preparada como parâmetros
@@ -52,6 +52,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         $id = $row["id"];
                         $username = $row["username"];
                         $hashed_password = $row["password"];
+                        $rank = $row["rank"];
                         $active = $row["active"];
                         if(password_verify($password, $hashed_password) && $active == 1){
                             // A senha está correta, então inicie uma nova sessão
@@ -60,7 +61,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             // Armazene dados em variáveis de sessão
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                       
+                            $_SESSION["username"] = $username;  
+                            $_SESSION["rank"] = $rank;                     
                             
                             // Redirecionar o usuário para a página de boas-vindas
                             header("location: welcome.php");
