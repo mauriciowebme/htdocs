@@ -1,6 +1,9 @@
 <?php
 // Inicialize a sessão
 session_start();
+ob_start();
+$page_title = "Editar Usuário";
+$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
  
 // Verifique se o usuário está logado, se não, redirecione-o para uma página de login
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
@@ -26,179 +29,16 @@ if(isset($_GET["id"])){
     $phone = $dados["phone"];
     $discord = $dados["discord"];
     $active = $dados["active"];
-
-    if($_SERVER["REQUEST_METHOD"] == "POST"){
-    
-        $sql = "UPDATE users SET name=:name, position=:position, serial=:serial, passaporte=:passaporte, phone=:phone, discord=:discord, active:active WHERE id=:id";
-    
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(":id", $param_id, PDO::PARAM_INT);
-        $stmt->bindParam(":name", $name, PDO::PARAM_STR);
-        $stmt->bindParam(":position", $position, PDO::PARAM_STR);
-        $stmt->bindParam(":serial", $serial, PDO::PARAM_STR);
-        $stmt->bindParam(":passaporte", $passaporte, PDO::PARAM_STR);
-        $stmt->bindParam(":phone", $phone, PDO::PARAM_STR);
-        $stmt->bindParam(":discord", $discord, PDO::PARAM_STR);
-        $stmt->bindParam(":active", $active, PDO::PARAM_STR);
-    
-        if($stmt->execute()){
-            echo "ATUALIZADO COM SUCESSO";
-        }
-    }
 }  else {
     header("Location: index.php");
 }
+
 
 ?>
 
 <!doctype html>
 <html lang="pt" data-bs-theme="auto">
-  <head><script src="../assets/js/color-modes.js"></script>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.115.4">
-    <title>Cadastro · Jurídico</title>
-
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
-
-    
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
-
-<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        .bi {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-}
-
-/*
- * Sidebar
- */
-
-@media (min-width: 768px) {
-  .sidebar .offcanvas-lg {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 48px;
-  }
-  .navbar-search {
-    display: block;
-  }
-}
-
-.sidebar .nav-link {
-  font-size: .875rem;
-  font-weight: 500;
-}
-
-.sidebar .nav-link.active {
-  color: #2470dc;
-}
-
-.sidebar-heading {
-  font-size: .75rem;
-}
-
-/*
- * Navbar
- */
-
-.navbar-brand {
-  padding-top: .75rem;
-  padding-bottom: .75rem;
-  background-color: rgba(0, 0, 0, .25);
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
-}
-
-.navbar .form-control {
-  padding: .75rem 1rem;
-}
-
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-
-      .b-example-divider {
-        width: 100%;
-        height: 3rem;
-        background-color: rgba(0, 0, 0, .1);
-        border: solid rgba(0, 0, 0, .15);
-        border-width: 1px 0;
-        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-      }
-
-      .b-example-vr {
-        flex-shrink: 0;
-        width: 1.5rem;
-        height: 100vh;
-      }
-
-      .bi {
-        vertical-align: -.125em;
-        fill: currentColor;
-      }
-
-      .nav-scroller {
-        position: relative;
-        z-index: 2;
-        height: 2.75rem;
-        overflow-y: hidden;
-      }
-
-      .nav-scroller .nav {
-        display: flex;
-        flex-wrap: nowrap;
-        padding-bottom: 1rem;
-        margin-top: -1px;
-        overflow-x: auto;
-        text-align: center;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      .btn-bd-primary {
-        --bd-violet-bg: #712cf9;
-        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
-
-        --bs-btn-font-weight: 600;
-        --bs-btn-color: var(--bs-white);
-        --bs-btn-bg: var(--bd-violet-bg);
-        --bs-btn-border-color: var(--bd-violet-bg);
-        --bs-btn-hover-color: var(--bs-white);
-        --bs-btn-hover-bg: #6528e0;
-        --bs-btn-hover-border-color: #6528e0;
-        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
-        --bs-btn-active-color: var(--bs-btn-hover-color);
-        --bs-btn-active-bg: #5a23c8;
-        --bs-btn-active-border-color: #5a23c8;
-      }
-      .bd-mode-toggle {
-        z-index: 1500;
-      }
-    </style>
-
-    
-    <!-- Custom styles for this template -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="dashboard.css" rel="stylesheet">
-  </head>
+  <?php include('../includes/headadmin.php'); ?>
   <body>
     
   <?php include ('../includes/theme.php'); ?>
@@ -243,16 +83,52 @@ if(isset($_GET["id"])){
           </button>
         </div>
       </div>
+      <?php 
+      //Receber dados do formulário
+        $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
-      <p class="fs-2">Cadastrar um usuário</p>
-    <form class="row g-3" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        //Verificar se o usuário clicou no botão
+        if(!empty($dados['EditUsuario'])){
+
+          $empty_input = false;
+          $dados = array_map('trim', $dados);
+          if(in_array("", $dados)) {
+            $empty_input = true;
+            echo "<p>Há campos em branco</p>";
+
+          }
+          if(!$empty_input){
+            $query = "UPDATE users SET name=:name, position=:position, serial=:serial, passaporte=:passaporte, phone=:phone, discord=:discord, active=:active WHERE id=:id";
+            $edit = $pdo->prepare($query);
+            $edit->bindParam(':name', $dados['name'], PDO::PARAM_STR);
+            $edit->bindParam(':position', $dados['position'], PDO::PARAM_STR);
+            $edit->bindParam(':serial', $dados['serial'], PDO::PARAM_STR);
+            $edit->bindParam(':passaporte', $dados['passaporte'], PDO::PARAM_INT);
+            $edit->bindParam(':phone', $dados['phone'], PDO::PARAM_STR);
+            $edit->bindParam(':discord', $dados['discord'], PDO::PARAM_STR);
+            $edit->bindParam(':active', $dados['active'], PDO::PARAM_INT);
+            $edit->bindParam(':id', $id, PDO::PARAM_INT);
+
+            if($edit->execute()){
+              echo "<p>Usuário editado com sucesso!.";
+              header("Location: index.php");
+            } else{
+              echo "<p>Usuário não editado.</p>";
+            }
+          }
+
+
+        }
+      ?>
+      <p class="fs-2">Editar usuário</p>
+    <form class="row g-3" id="edit-usuario" action="" method="POST">
     <div class="col-md-2">
     <label for="id" class="form-label">ID</label>
     <input type="text" class="form-control" id="id" value="<?php echo $id; ?>" disabled>
   </div>
     <div class="col-md-4">
     <label for="name" class="form-label">Nome</label>
-    <input type="text" name="name" class="form-control" value="<?php echo $name; ?>">
+    <input type="text" id="name" name="name" class="form-control" value="<?php echo $name; ?>">
   </div>
   <div class="col-md-4">
     <label for="username" class="form-label">Usuário</label>
@@ -282,36 +158,19 @@ if(isset($_GET["id"])){
     <input type="text" name="discord" class="form-control" value="<?php echo $discord; ?>">
 
   </div>
-  <div class="col-md-2">
-  <div class="col-md-2">
-  <label for="discord" class="form-label">Ativo</label>
-    </div>
-        <?php if ($dados["active"] == 1) { ?>
-            <div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="active" id="ativo" value="1" checked>
-  <label class="form-check-label" for="active">Sim</label>
-</div>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="active" id="active" value="0">
-  <label class="form-check-label" for="active">Não</label>
-</div>
-            <?php 
-        } else {
-            ?>
-           <div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="active" value="1">
+  <div class="col-md-4">
+  <label for="discord" class="form-label">Ativo? </label>
+  <div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="active" id="active" value="1" <?php if($active == 1){ echo "checked";} ?>>
   <label class="form-check-label" for="inlineRadio1">Sim</label>
 </div>
 <div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="active" id="active" value="0" checked>
+  <input class="form-check-input" type="radio" name="active" id="active" value="0" <?php if($active == 0){ echo "checked";} ?>>
   <label class="form-check-label" for="active">Não</label>
 </div>
-            <?php 
-        }
-        ?>
-  </div>
+      </div>
   <div class="col-12">
-  <input type="submit" class="btn btn-primary" value="atualizar" name="Atualizar>
+  <input type="submit" class="btn btn-primary" value="Atualizar" name="EditUsuario">
 
   </div>
 </form>

@@ -220,17 +220,43 @@ if(isset($_GET['delete'])){
         
       </div>
 
-      <h2>Área logada</h2>
-      <div class="card">
-  <div class="card-header">
-    Featured
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">Special title treatment</h5>
-    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
-  </div>
-</div>
+      <h2>Membros Cadastrados</h2>
+      <div class="table-responsive small">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Nome</th>
+              <th scope="col">Usuário</th>
+              <th scope="col">Passaporte</th>
+              <th scope="col">Inscrição</th>
+              <th scope="col">Cargo</th>
+              <th scope="col">Telefone</th>
+              <th scope="col">Rank</th>
+              <th scope="col">Cadastrado em</th>
+              <th scope="col">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php while($dados = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+              ?>
+            <tr>
+              <td><?php echo $dados["name"]; ?></td>
+              <td><?php echo $dados["username"]; ?></td>
+              <td><?php echo $dados["passaporte"]; ?></td>
+              <td><?php echo $dados["serial"]; ?></td>
+              <td><?php echo $dados["position"]; ?></td>
+              <td><?php echo $dados["phone"]; ?></td>
+              <td><?php echo $dados["rank"]; ?></td>
+              <td><?php echo substr($dados["created"], 0, -9); ?></td>
+              <td>
+                <a class="btn btn-sm btn-secondary" href="../admin/editar.php?id=<?php echo $dados["id"] ?>"><i class="bi bi-pencil"></i></a>
+                <a class="btn btn-sm btn-danger" href="?delete=<?php echo $dados["id"] ?>"><i class="bi bi-trash"></i></a>
+              </td>
+            </tr>
+            <?php } ?>
+          </tbody>
+        </table>
+      </div>
     </main>
   </div>
 </div>
