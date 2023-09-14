@@ -45,60 +45,51 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" href="cadastro.php">
-                <svg class="bi"><use xlink:href="#people"/></svg>
-                Cadastro
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 disabled" href="#">
-                <svg class="bi"><use xlink:href="#file-earmark"/></svg>
-                Arquivos
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="../index.php">
+                <svg class="bi"><use xlink:href="#house-fill"/></svg>
+                Site
               </a>
             </li>
           </ul>
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
-            <span>Saved reports</span>
-            <a class="link-secondary disabled" href="#" aria-label="Add a new report">
-              <svg class="bi"><use xlink:href="#plus-circle"/></svg>
-            </a>
+            <span>Relatórios</span>
           </h6>
           <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 disabled" href="#">
+              <a class="nav-link d-flex align-items-center gap-2" href="../admin/relaten.php">
                 <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
-                Current month
+                Atendimentos
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="../admin/regnome.php">
+                <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
+                Nomes
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="../admin/regcasamento.php">
+                <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
+                Casamentos
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link d-flex align-items-center gap-2 disabled" href="#">
                 <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
-                Last quarter
+                Fila Adoção
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link d-flex align-items-center gap-2 disabled" href="#">
                 <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
-                Social engagement
+                Limpeza Ficha
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link d-flex align-items-center gap-2 disabled" href="#">
                 <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
-                Year-end sale
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 disabled" href="#">
-                <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
-                Year-end sale
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 disabled" href="#">
-                <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
-                Year-end sale
+                Porte Armas
               </a>
             </li>
           </ul>
@@ -106,6 +97,7 @@
           <hr class="my-3">
 
           <ul class="nav flex-column mb-auto">
+
             <?php if($_SESSION["rank"] >= 1) { ?>
             <li class="nav-item">
               <a class="nav-link d-flex align-items-center gap-2" href="/admin/admin.php">
@@ -114,6 +106,12 @@
               </a>
             </li>
             <?php } ?>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="../resetpassword.php">
+              <i class="bi bi-key"></i>
+               Redefinir Senha
+              </a>
+            </li>
             <li class="nav-item">
               <a class="nav-link d-flex align-items-center gap-2" href="../logout.php">
                 <svg class="bi"><use xlink:href="#door-closed"/></svg>

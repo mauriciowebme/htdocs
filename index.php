@@ -1,3 +1,10 @@
+<?php
+// Inicialize a sessão
+session_start();
+ 
+// Verifique se o usuário está logado, se não, redirecione-o para uma página de login
+
+?>
 <!doctype html>
 <html lang="pt-BR" data-bs-theme="auto">
   <head><script src="assets/js/color-modes.js"></script>

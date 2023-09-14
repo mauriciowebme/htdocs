@@ -32,9 +32,8 @@
               </ul>
             </li>
           </ul>
-          
           <div class="d-lg-flex col-lg-3 justify-content-lg-end">
-          <a href="login.php" class="btn btn-primary btn-md px-3">Login</a>
+          <a href="../login.php" class="btn btn-primary btn-md px-3">Administração</a>
           </div>
         
         </div>

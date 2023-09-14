@@ -17,18 +17,19 @@
     }
 
     // URL FROM DISCORD WEBHOOK SETUP
-    $webhook = "link do webhook"; 
+    
+    $webhook = "https://discord.com/api/webhooks/1151034318643273788/HfdmZ4KYDFmYJN-8TahQSz-Fkah6yHa3bvL90tJRhITmDFdkSjjdg3kPBUesUPH_qK6P"; 
     $timestamp = date("c", strtotime("now"));
     $msg = json_encode([
     // Message
-    "content" => "Conteúdo em mensagem",
+    //"content" => "Poder Judiciário",
 
     // Username
-    "username" => "nome do usuário que enviou mensagem",
+    "username" => "Tribunal de Justiça",
 
     // Avatar URL.
     // Uncomment to use custom avatar instead of bot's pic
-    //"avatar_url" => "link da imagem do perfil (preferência pegar do discord)",
+    "avatar_url" => "https://cdn.discordapp.com/attachments/1151381245461274664/1151388885872553984/poder_judiciario_logo.png?size=500",
 
     // text-to-speech
     "tts" => false,
@@ -40,16 +41,16 @@
     "embeds" => [
         [
             // Title
-            "title" => "Título da mensagem",
+            "title" => "Cadastro Nacional de Advogados",
 
             // Embed Type, do not change.
             "type" => "rich",
 
             // Description
-            "description" => "Descrição",
+            "description" => "Este documento tem fé publica e foi assinado digitalmente pela autoridade judiciária",
 
             // Link in title
-            "url" => " ",
+           // "url" => "",
 
             // Timestamp, only ISO8601
             "timestamp" => $timestamp,
@@ -59,39 +60,39 @@
 
             // Footer text
             "footer" => [
-                "text" => "texto do footer",
-                "icon_url" => "ícone pequeno do footer"
+                "text" => "Via Tribunal de Justiça por ".$_SESSION["name"],
+                "icon_url" => "https://cdn.discordapp.com/attachments/1151381245461274664/1151388885872553984/poder_judiciario_logo.png?size=375"
             ],
 
             // Embed image
             "image" => [
-                "url" => " "
+                //"url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=600"
             ],
 
             // thumbnail
-            //"thumbnail" => [
-            //    "url" => "thumb de canto"
-            //],
+            "thumbnail" => [
+                "url" => "https://cdn.discordapp.com/attachments/1151381245461274664/1151394761945657374/icon.png?size=400"
+            ],
 
             // Author name & url
             "author" => [
-                "name" => "autor",
-                "url" => "link se houver"
+                "name" => "Ordem dos Advogados",
+                //"url" => "https://krasin.space/"
             ],
 
             // Custom fields
             "fields" => [
                 // Field 1
                 [
-                    "name" => "Field #1",
-                    "value" => "Value #1",
+                    "name" => "Nome:",
+                    "value" => $param_name,
                     "inline" => false
                 ],
                 // Field 2
                 [
-                    "name" => "Field #2",
-                    "value" => "Value #2",
-                    "inline" => true
+                    "name" => "Passaporte:",
+                    "value" => $param_passaporte,
+                    "inline" => false
                 ]
                 // etc
             ]
@@ -101,5 +102,4 @@
 ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 
     discordmsg($msg, $webhook); // SENDS MESSAGE TO DISCORD
-    echo "sent?";
 ?>

@@ -8,8 +8,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     exit;
 }
 
-require_once "../config.php";
+require("../config.php");
 
+$page_title = "Cadastrar Usuário";
 // Defina variáveis e inicialize com valores vazios
 $name = $username = $password = $position = $serial = $phone = $discord = $passaporte = "";
 $name_err = $username_err = $password_err = $position_err = $serial_err = $phone_err = $discord_err = $passaporte_err = "";
@@ -178,7 +179,7 @@ if(empty(trim($_POST["discord"]))){
             
             // Tente executar a declaração preparada
             if($stmt->execute()){
-                $caduser = "Usuário cadastrado com sucesso.";
+                include_once("../discord-post.php");
             } else{
                 echo "Ops! Algo deu errado. Por favor, tente novamente mais tarde.";
             }
@@ -195,152 +196,7 @@ if(empty(trim($_POST["discord"]))){
 
 <!doctype html>
 <html lang="pt" data-bs-theme="auto">
-  <head><script src="../assets/js/color-modes.js"></script>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.115.4">
-    <title>Cadastro · Jurídico</title>
-
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
-
-    
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
-
-<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        .bi {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-}
-
-/*
- * Sidebar
- */
-
-@media (min-width: 768px) {
-  .sidebar .offcanvas-lg {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 48px;
-  }
-  .navbar-search {
-    display: block;
-  }
-}
-
-.sidebar .nav-link {
-  font-size: .875rem;
-  font-weight: 500;
-}
-
-.sidebar .nav-link.active {
-  color: #2470dc;
-}
-
-.sidebar-heading {
-  font-size: .75rem;
-}
-
-/*
- * Navbar
- */
-
-.navbar-brand {
-  padding-top: .75rem;
-  padding-bottom: .75rem;
-  background-color: rgba(0, 0, 0, .25);
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
-}
-
-.navbar .form-control {
-  padding: .75rem 1rem;
-}
-
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-
-      .b-example-divider {
-        width: 100%;
-        height: 3rem;
-        background-color: rgba(0, 0, 0, .1);
-        border: solid rgba(0, 0, 0, .15);
-        border-width: 1px 0;
-        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-      }
-
-      .b-example-vr {
-        flex-shrink: 0;
-        width: 1.5rem;
-        height: 100vh;
-      }
-
-      .bi {
-        vertical-align: -.125em;
-        fill: currentColor;
-      }
-
-      .nav-scroller {
-        position: relative;
-        z-index: 2;
-        height: 2.75rem;
-        overflow-y: hidden;
-      }
-
-      .nav-scroller .nav {
-        display: flex;
-        flex-wrap: nowrap;
-        padding-bottom: 1rem;
-        margin-top: -1px;
-        overflow-x: auto;
-        text-align: center;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      .btn-bd-primary {
-        --bd-violet-bg: #712cf9;
-        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
-
-        --bs-btn-font-weight: 600;
-        --bs-btn-color: var(--bs-white);
-        --bs-btn-bg: var(--bd-violet-bg);
-        --bs-btn-border-color: var(--bd-violet-bg);
-        --bs-btn-hover-color: var(--bs-white);
-        --bs-btn-hover-bg: #6528e0;
-        --bs-btn-hover-border-color: #6528e0;
-        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
-        --bs-btn-active-color: var(--bs-btn-hover-color);
-        --bs-btn-active-bg: #5a23c8;
-        --bs-btn-active-border-color: #5a23c8;
-      }
-      .bd-mode-toggle {
-        z-index: 1500;
-      }
-    </style>
-
-    
-    <!-- Custom styles for this template -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="dashboard.css" rel="stylesheet">
-  </head>
+<?php include('../includes/headadmin.php'); ?>
   <body>
     
   <?php include ('../includes/theme.php'); ?>
@@ -412,7 +268,7 @@ if(empty(trim($_POST["discord"]))){
   </ul>
 
   <div class="right px-4">
-    <p class="fs-2">Olá, <?php echo htmlspecialchars($_SESSION["username"]); ?></p>
+    <p class="fs-2">Olá, <?php echo $_SESSION["name"]; ?></p>
 </div>
 </header>
 
@@ -424,16 +280,6 @@ if(empty(trim($_POST["discord"]))){
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Administração</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1">
-            <svg class="bi"><use xlink:href="#calendar3"/></svg>
-            This week
-          </button>
-        </div>
       </div>
 
       <p class="fs-2">Cadastrar um usuário</p>
@@ -453,10 +299,23 @@ if(empty(trim($_POST["discord"]))){
     <input type="text" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
     <span class="invalid-feedback"><?php echo $password_err; ?></span>
   </div>
-  <div class="col-md-4">
-    <label for="position" class="form-label">Cargo</label>
-    <input type="text" name="position" class="form-control <?php echo (!empty($position_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $position; ?>">
-    <span class="invalid-feedback"><?php echo $position_err; ?></span>
+  <div class="col-md-5">
+  <label for="position" class="form-label">Cargo</label>
+  <select class="form-select" name="position" aria-label="position">
+  <option selected>Selecione</option>
+  <option value="Responsável Geral">Responsável Geral</option>
+  <option value="Responsável">Responsável</option>
+  <option value="Desembargador">Desembargador</option>
+  <option value="Juiz">Juiz</option>
+  <option value="Promotor">Promotor</option>
+  <option value="Diretor">Diretor</option>
+  <option value="Conselheiro">Conselheiro</option>
+  <option value="Advogado Master">Advogado Master</option>
+  <option value="Advogado Sênior">Advogado Sênior</option>
+  <option value="Advogado Pleno">Advogado Pleno</option>
+  <option value="Advogado Júnior">Advogado Júnior</option>
+  <option value="Estagiário">Estagiário</option>
+</select>
   </div>
   <div class="col-md-1">
   <label for="rank" class="form-label">Rank</label>

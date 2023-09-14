@@ -262,7 +262,7 @@ body {
       <label for="confirm_password">Confirme a senha</label>
       <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
     </div>
-
+      <a href="../admin/index.php">Cancelar redefinição</a>
     <button class="btn btn-secondary w-100 py-2" type="submit">Redefinir</button>
     <p class="mt-5 mb-3 text-body-secondary">Erick Collins &copy; 2023</p>
     

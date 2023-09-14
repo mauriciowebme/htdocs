@@ -30,7 +30,7 @@ if(isset($_GET["id"])){
     $discord = $dados["discord"];
     $active = $dados["active"];
 }  else {
-    header("Location: index.php");
+    header("Location: ../admin/index.php");
 }
 
 
@@ -59,7 +59,7 @@ if(isset($_GET["id"])){
     </li>
   </ul>
 
-  <div class="right px-4">
+  <div class="right px-4 text-white">
     <p class="fs-2">Olá, <?php echo htmlspecialchars($_SESSION["username"]); ?></p>
 </div>
 </header>
@@ -72,16 +72,7 @@ if(isset($_GET["id"])){
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Administração</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1">
-            <svg class="bi"><use xlink:href="#calendar3"/></svg>
-            This week
-          </button>
-        </div>
+      
       </div>
       <?php 
       //Receber dados do formulário
@@ -98,7 +89,7 @@ if(isset($_GET["id"])){
 
           }
           if(!$empty_input){
-            $query = "UPDATE users SET name=:name, position=:position, serial=:serial, passaporte=:passaporte, phone=:phone, discord=:discord, active=:active WHERE id=:id";
+            $query = "UPDATE users SET name=:name, position=:position, serial=:serial, passaporte=:passaporte, phone=:phone, discord=:discord, active=:active, image=:image WHERE id=:id";
             $edit = $pdo->prepare($query);
             $edit->bindParam(':name', $dados['name'], PDO::PARAM_STR);
             $edit->bindParam(':position', $dados['position'], PDO::PARAM_STR);
@@ -108,10 +99,10 @@ if(isset($_GET["id"])){
             $edit->bindParam(':discord', $dados['discord'], PDO::PARAM_STR);
             $edit->bindParam(':active', $dados['active'], PDO::PARAM_INT);
             $edit->bindParam(':id', $id, PDO::PARAM_INT);
+            $edit->bindParam(':image', $dados['image'], PDO::PARAM_STR);
 
             if($edit->execute()){
-              echo "<p>Usuário editado com sucesso!.";
-              header("Location: index.php");
+              header("Location: ../admin/admin.php");
             } else{
               echo "<p>Usuário não editado.</p>";
             }
@@ -137,7 +128,21 @@ if(isset($_GET["id"])){
 
   <div class="col-md-4">
     <label for="position" class="form-label">Cargo</label>
-    <input type="text" name="position" class="form-control" value="<?php echo $position; ?>">
+    <select class="form-select" name="position" aria-label="position">
+  <option selected>Selecione</option>
+  <option value="Responsável Geral">Responsável Geral</option>
+  <option value="Responsável">Responsável</option>
+  <option value="Desembargador">Desembargador</option>
+  <option value="Juiz">Juiz</option>
+  <option value="Promotor">Promotor</option>
+  <option value="Diretor">Diretor</option>
+  <option value="Conselheiro">Conselheiro</option>
+  <option value="Advogado Master">Advogado Master</option>
+  <option value="Advogado Sênior">Advogado Sênior</option>
+  <option value="Advogado Pleno">Advogado Pleno</option>
+  <option value="Advogado Júnior">Advogado Júnior</option>
+  <option value="Estagiário">Estagiário</option>
+</select>
    
   </div>
   <div class="col-md-2">
@@ -159,16 +164,21 @@ if(isset($_GET["id"])){
 
   </div>
   <div class="col-md-4">
-  <label for="discord" class="form-label">Ativo? </label>
-  <div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="active" id="active" value="1" <?php if($active == 1){ echo "checked";} ?>>
-  <label class="form-check-label" for="inlineRadio1">Sim</label>
-</div>
-<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="active" id="active" value="0" <?php if($active == 0){ echo "checked";} ?>>
-  <label class="form-check-label" for="active">Não</label>
-</div>
-      </div>
+    <label for="discord" class="form-label">Ativo? </label>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="active" id="active" value="1" <?php if($active == 1){ echo "checked";} ?>>
+      <label class="form-check-label" for="inlineRadio1">Sim</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="active" id="active" value="0" <?php if($active == 0){ echo "checked";} ?>>
+      <label class="form-check-label" for="active">Não</label>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <label for="image" class="form-label">Imagem</label>
+    <input type="text" name="image" class="form-control" placeholder="https://link da imagem.png">
+
+  </div>
   <div class="col-12">
   <input type="submit" class="btn btn-primary" value="Atualizar" name="EditUsuario">
 

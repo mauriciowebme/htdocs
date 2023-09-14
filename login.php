@@ -4,7 +4,7 @@ session_start();
  
 // Verifique se o usuário já está logado, em caso afirmativo, redirecione-o para a página de boas-vindas
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    header("location: welcome.php");
+    header("location: ../admin/index.php");
     exit;
 }
  
@@ -35,7 +35,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validar credenciais
     if(empty($username_err) && empty($password_err)){
         // Prepare uma declaração selecionada
-        $sql = "SELECT id, username, password, rank, active FROM users WHERE username = :username";
+        $sql = "SELECT id, name, username, password, rank, active FROM users WHERE username = :username";
         
         if($stmt = $pdo->prepare($sql)){
             // Vincule as variáveis à instrução preparada como parâmetros
@@ -50,6 +50,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 if($stmt->rowCount() == 1){
                     if($row = $stmt->fetch()){
                         $id = $row["id"];
+                        $name = $row["name"];
                         $username = $row["username"];
                         $hashed_password = $row["password"];
                         $rank = $row["rank"];
@@ -61,11 +62,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             // Armazene dados em variáveis de sessão
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
+                            $_SESSION["name"] = $name;
                             $_SESSION["username"] = $username;  
                             $_SESSION["rank"] = $rank;                     
                             
                             // Redirecionar o usuário para a página de boas-vindas
-                            header("location: welcome.php");
+                            header("location: ../admin/index.php");
                         } else{
                             // A senha não é válida, exibe uma mensagem de erro genérica
                             $login_err = "Problema ao se conectar, contate um Administrador.";

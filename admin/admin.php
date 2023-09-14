@@ -10,6 +10,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 
 require("../config.php");
 
+$page_title = "Administração";
+
 $stmt = $pdo->prepare("SELECT * FROM users");
 $stmt->execute();
 
@@ -17,7 +19,7 @@ if(isset($_GET['delete'])){
 
     $id = (int)$_GET['delete'];
     $pdo->exec("DELETE FROM users WHERE id=$id");
-    header("Location: index.php");
+    header("Location: ../admin/admin.php");
 
 }
 
@@ -193,7 +195,7 @@ if(isset($_GET['delete'])){
     </li>
   </ul>
 
-  <div class="right px-4">
+  <div class="right px-4 text-white">
     <p class="fs-2">Olá, <?php echo htmlspecialchars($_SESSION["username"]); ?></p>
 </div>
 </header>
@@ -209,22 +211,22 @@ if(isset($_GET['delete'])){
         <h1 class="h2">Administração</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+            <a class="btn btn-sm btn-outline-primary" href="../admin/cadastro.php" role="button">Cadastrar Usuário</a>
           </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1">
-            <svg class="bi"><use xlink:href="#calendar3"/></svg>
-            This week
-          </button>
         </div>
         
       </div>
-
+      <div class="alert alert-primary md" role="alert">
+  Não cadastrar usuários sem autorização do Administrador.
+</div>
+</br>
+    <hr>
       <h2>Membros Cadastrados</h2>
       <div class="table-responsive small">
         <table class="table table-striped table-sm">
           <thead>
             <tr>
+            <th scope="col">Nº</th>
               <th scope="col">Nome</th>
               <th scope="col">Usuário</th>
               <th scope="col">Passaporte</th>
@@ -240,6 +242,7 @@ if(isset($_GET['delete'])){
             <?php while($dados = $stmt->fetch(PDO::FETCH_ASSOC)) { 
               ?>
             <tr>
+            <td><?php echo $dados["id"]; ?></td>
               <td><?php echo $dados["name"]; ?></td>
               <td><?php echo $dados["username"]; ?></td>
               <td><?php echo $dados["passaporte"]; ?></td>
@@ -247,10 +250,10 @@ if(isset($_GET['delete'])){
               <td><?php echo $dados["position"]; ?></td>
               <td><?php echo $dados["phone"]; ?></td>
               <td><?php echo $dados["rank"]; ?></td>
-              <td><?php echo substr($dados["created"], 0, -9); ?></td>
+              <td><?php echo $dados["created"]; ?></td>
               <td>
-                <a class="btn btn-sm btn-secondary" href="../admin/editar.php?id=<?php echo $dados["id"] ?>"><i class="bi bi-pencil"></i></a>
-                <a class="btn btn-sm btn-danger" href="?delete=<?php echo $dados["id"] ?>"><i class="bi bi-trash"></i></a>
+                <a class="btn btn-sm btn-secondary <?php if($_SESSION["rank"] < $dados["rank"]) { ?>disabled<?php } ?>" href="../admin/editar.php?id=<?php echo $dados["id"] ?>"><i class="bi bi-pencil"></i></a>
+                <a class="btn btn-sm btn-danger <?php if($_SESSION["rank"] <= $dados["rank"]) { ?>disabled<?php } ?>" href="?delete=<?php echo $dados["id"] ?>"><i class="bi bi-trash"></i></a>
               </td>
             </tr>
             <?php } ?>
